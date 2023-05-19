@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,9 +10,12 @@ namespace MyOrganization
     {
         private Position root;
 
+        private int id;
+
         public Organization()
         {
             root = CreateOrganization();
+            id = 0;
         }
 
         protected abstract Position CreateOrganization();
@@ -26,7 +29,32 @@ namespace MyOrganization
          */
         public Position? Hire(Name person, string title)
         {
-            //your code here
+            return HireEmployeeRecursive(root, person, title);
+        }
+
+        /**
+         * Recursive method to hire the given person as an employee in the position that has that title
+         * 
+         * @param position
+         * @param person
+         * @param title
+         * @return the newly filled position or empty if no position has that title
+         */
+        public Position? HireEmployeeRecursive(Position position, Name person, string title)
+        {
+            if (position.GetTitle().Equals(title))
+            {
+                id++;
+                position.SetEmployee(new Employee(id, person));
+                return position;
+
+            } else {
+                foreach (Position p in position.GetDirectReports())
+                {
+                    HireEmployeeRecursive(p, person, title);
+                }
+            }
+
             return null;
         }
 
